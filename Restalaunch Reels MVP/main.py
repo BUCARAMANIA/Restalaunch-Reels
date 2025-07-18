@@ -5,16 +5,16 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 from flask import Flask, send_from_directory
 from flask_cors import CORS
-from src.models.user import db
-from src.models.vendor import Vendor, MenuItem, Review
-from src.models.video import Video, Like, Comment, VideoMenuItem
+from user import db
+from vendor import Vendor, MenuItem, Review
+from video import Video, Like, Comment, VideoMenuItem
 
 # Import route blueprints
-from src.routes.user import user_bp
-from src.routes.auth import auth_bp
-from src.routes.vendor import vendor_bp
-from src.routes.video import video_bp
-from src.routes.feed import feed_bp
+from user import user_bp
+from auth import auth_bp
+from vendor import vendor_bp
+from video import video_bp
+from feed import feed_bp
 
 app = Flask(__name__, static_folder=os.path.join(os.path.dirname(__file__), 'static'))
 app.config['SECRET_KEY'] = 'asdf#FGSgvasgf$5$WGT'

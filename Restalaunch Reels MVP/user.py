@@ -1,8 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask import Blueprint, request, jsonify
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
+
+# Create the blueprint
+user_bp = Blueprint('user', __name__)
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -63,9 +67,9 @@ class User(db.Model):
             'bio': self.bio,
             'is_vendor': self.is_vendor,
             'is_verified': self.is_verified,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
             'follower_count': self.get_follower_count(),
-            'following_count': self.get_following_count(),
-            'created_at': self.created_at.isoformat() if self.created_at else None
+            'following_count': self.get_following_count()
         }
 
     def to_public_dict(self):
@@ -97,4 +101,23 @@ class Follow(db.Model):
             'followed_id': self.followed_id,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
+
+# User routes
+@user_bp.route('/<int:user_id>', methods=['GET'])
+def get_user(user_id):
+    """Get user profile"""
+    user = User.query.get_or_404(user_id)
+    return jsonify(user.to_public_dict())
+
+@user_bp.route('/<int:user_id>/follow', methods=['POST'])
+def follow_user(user_id):
+    """Follow a user"""
+    # This would need authentication, but for now just return success
+    return jsonify({'message': 'User followed successfully'})
+
+@user_bp.route('/<int:user_id>/unfollow', methods=['POST'])
+def unfollow_user(user_id):
+    """Unfollow a user"""
+    # This would need authentication, but for now just return success
+    return jsonify({'message': 'User unfollowed successfully'})
 

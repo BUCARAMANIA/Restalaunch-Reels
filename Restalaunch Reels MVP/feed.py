@@ -1,8 +1,8 @@
 from flask import Blueprint, request, jsonify
-from src.models.user import db, User, Follow
-from src.models.vendor import Vendor
-from src.models.video import Video, Like
-from src.routes.auth import token_required
+from user import db, User, Follow
+from vendor import Vendor
+from video import Video, Like
+from auth import token_required
 from sqlalchemy import desc, func, and_, or_
 from datetime import datetime, timedelta
 import random
