@@ -1,5 +1,9 @@
-from src.models.user import db
+from user import db
+from flask import Blueprint, request, jsonify
 from datetime import datetime
+
+# Create the blueprint
+video_bp = Blueprint('video', __name__)
 
 class Video(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -173,4 +177,29 @@ class VideoMenuItem(db.Model):
             'menu_item_id': self.menu_item_id,
             'created_at': self.created_at.isoformat() if self.created_at else None
         }
+
+# Video routes
+@video_bp.route('/<int:video_id>', methods=['GET'])
+def get_video(video_id):
+    """Get video details"""
+    video = Video.query.get_or_404(video_id)
+    return jsonify(video.to_dict())
+
+@video_bp.route('/', methods=['GET'])
+def get_videos():
+    """Get all videos"""
+    videos = Video.query.all()
+    return jsonify([video.to_dict() for video in videos])
+
+@video_bp.route('/<int:video_id>/like', methods=['POST'])
+def like_video(video_id):
+    """Like a video"""
+    # This would need authentication, but for now just return success
+    return jsonify({'message': 'Video liked successfully'})
+
+@video_bp.route('/<int:video_id>/comment', methods=['POST'])
+def comment_video(video_id):
+    """Comment on a video"""
+    # This would need authentication and request data, but for now just return success
+    return jsonify({'message': 'Comment added successfully'})
 

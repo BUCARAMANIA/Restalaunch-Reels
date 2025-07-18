@@ -1,5 +1,9 @@
-from src.models.user import db
+from user import db
+from flask import Blueprint, request, jsonify
 from datetime import datetime
+
+# Create the blueprint
+vendor_bp = Blueprint('vendor', __name__)
 
 class Vendor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -157,4 +161,17 @@ class Review(db.Model):
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'user': self.user.to_public_dict() if self.user else None
         }
+
+# Vendor routes
+@vendor_bp.route('/<int:vendor_id>', methods=['GET'])
+def get_vendor(vendor_id):
+    """Get vendor profile"""
+    vendor = Vendor.query.get_or_404(vendor_id)
+    return jsonify(vendor.to_dict())
+
+@vendor_bp.route('/', methods=['GET'])
+def get_vendors():
+    """Get all vendors"""
+    vendors = Vendor.query.all()
+    return jsonify([vendor.to_dict() for vendor in vendors])
 
